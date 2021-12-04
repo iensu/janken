@@ -1,14 +1,14 @@
 use std::io;
 
-fn main() {
+fn main() -> Result<(), io::Error> {
     let mut buffer = String::new();
     let stdin = io::stdin();
 
     println!("Write something:");
 
-    stdin
-        .read_line(&mut buffer)
-        .expect("Failed to read from stdin");
+    stdin.read_line(&mut buffer)?;
 
     println!("You wrote: {}", buffer);
+
+    Ok(())
 }
