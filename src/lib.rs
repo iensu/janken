@@ -1,12 +1,12 @@
 #[derive(PartialEq, Debug)]
-enum RoundResult {
+pub enum RoundResult {
     Win,
     Loss,
     Draw,
 }
 
 #[derive(PartialEq, Debug)]
-enum HandShape {
+pub enum HandShape {
     Rock,
     Paper,
     Scissors,
@@ -16,7 +16,7 @@ enum HandShape {
 ///
 /// The result is from the perspective of `p1`, so a result of
 /// `RoundResult::Win` indicates that `p1` won.
-fn execute_round(p1: HandShape, p2: HandShape) -> RoundResult {
+pub fn execute_round(p1: HandShape, p2: HandShape) -> RoundResult {
     match (p1, p2) {
         (x, y) if x == y => RoundResult::Draw,
         (HandShape::Rock, HandShape::Scissors) => RoundResult::Win,
