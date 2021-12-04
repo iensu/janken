@@ -16,6 +16,16 @@ pub enum HandShape {
 ///
 /// The result is from the perspective of `p1`, so a result of
 /// `RoundResult::Win` indicates that `p1` won.
+///
+/// ## Examples
+///
+/// ```
+/// use janken::*;
+///
+/// let result = execute_round(HandShape::Paper, HandShape::Rock);
+///
+/// assert_eq!(RoundResult::Win, result);
+/// ```
 pub fn execute_round(p1: HandShape, p2: HandShape) -> RoundResult {
     match (p1, p2) {
         (x, y) if x == y => RoundResult::Draw,
