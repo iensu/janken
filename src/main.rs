@@ -2,6 +2,12 @@ fn main() {
     println!("Hello, world!");
 }
 
+enum HandShape {
+    Rock,
+    Paper,
+    Scissors,
+}
+
 fn is_winner(p1: &str, p2: &str) -> bool {
     if p1 == "rock" && p2 == "scissors" {
         return true;
