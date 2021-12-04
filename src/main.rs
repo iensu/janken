@@ -52,4 +52,23 @@ mod tests {
             is_winner(HandShape::Paper, HandShape::Rock)
         )
     }
+
+    #[test]
+    fn is_winner_handles_draws() {
+        assert_eq!(
+            RoundResult::Draw,
+            is_winner(HandShape::Paper, HandShape::Paper),
+            "Paper draw failed"
+        );
+        assert_eq!(
+            RoundResult::Draw,
+            is_winner(HandShape::Rock, HandShape::Rock),
+            "Rock draw failed"
+        );
+        assert_eq!(
+            RoundResult::Draw,
+            is_winner(HandShape::Scissors, HandShape::Scissors),
+            "Scissors draw failed"
+        );
+    }
 }
