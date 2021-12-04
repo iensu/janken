@@ -3,7 +3,11 @@ fn main() {
 }
 
 fn is_winner(p1: &str, p2: &str) -> bool {
-    todo!()
+    if p1 == "rock" && p2 == "scissors" {
+        return true;
+    }
+
+    false
 }
 
 #[cfg(test)]
