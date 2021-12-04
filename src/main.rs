@@ -18,6 +18,7 @@ enum HandShape {
 
 fn is_winner(p1: HandShape, p2: HandShape) -> RoundResult {
     match (p1, p2) {
+        (x, y) if x == y => RoundResult::Draw,
         (HandShape::Rock, HandShape::Scissors) => RoundResult::Win,
         (HandShape::Scissors, HandShape::Paper) => RoundResult::Win,
         (HandShape::Paper, HandShape::Rock) => RoundResult::Win,
