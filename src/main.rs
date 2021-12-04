@@ -7,9 +7,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn is_meaning_of_life() {
-        let meaning_of_life = 42;
-
-        assert_eq!(42, meaning_of_life);
+    fn rock_wins_over_scissors() {
+        assert_eq!(true, is_winner("rock", "scissors"))
     }
 }
