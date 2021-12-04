@@ -10,15 +10,12 @@ enum HandShape {
 }
 
 fn is_winner(p1: HandShape, p2: HandShape) -> bool {
-    if p1 == "rock" && p2 == "scissors" {
-        return true;
-    } else if p1 == "scissors" && p2 == "paper" {
-        return true;
-    } else if p1 == "paper" && p2 == "rock" {
-        return true;
+    match (p1, p2) {
+        (HandShape::Rock, HandShape::Scissors) => true,
+        (HandShape::Scissors, HandShape::Paper) => true,
+        (HandShape::Paper, HandShape::Rock) => true,
+        _ => false,
     }
-
-    false
 }
 
 #[cfg(test)]
