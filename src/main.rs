@@ -2,6 +2,7 @@ fn main() {
     println!("Hello, world!");
 }
 
+#[derive(PartialEq, Debug)]
 enum HandShape {
     Rock,
     Paper,
