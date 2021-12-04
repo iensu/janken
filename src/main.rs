@@ -6,7 +6,12 @@ fn main() {
 
     println!("Write something:");
 
-    stdin.read_line(&mut buffer).unwrap();
-
-    println!("You wrote: {}", buffer);
+    match stdin.read_line(&mut buffer) {
+        Ok(_) => {
+            println!("You wrote: {}", buffer);
+        }
+        Err(err) => {
+            println!("Failed to read user input! {:?}", err);
+        }
+    }
 }
