@@ -1,18 +1,32 @@
 use std::io;
 
-use janken::HandShape;
+use janken::{execute_round, HandShape, RoundResult};
 
 fn main() -> Result<(), io::Error> {
-    let mut buffer = String::new();
     let stdin = io::stdin();
+    let mut buffer = String::new();
 
-    println!("Write something:");
+    loop {
+        println!("Rock, paper or scissors?");
+        stdin.read_line(&mut buffer)?;
 
-    stdin.read_line(&mut buffer)?;
-
-    match HandShape::try_from(buffer) {
-        Ok(shape) => println!("Got {:?}", shape),
-        Err(err) => println!("Failed to get hand shape: {}", err),
+        if let Ok(shape) = HandShape::try_from(buffer) {
+            match execute_round(shape, HandShape::Paper) {
+                RoundResult::Win => {
+                    println!("Hooray! You won! \\(^O^)/");
+                    break;
+                }
+                RoundResult::Loss => {
+                    println!("Boohoo, you lost! (T T)");
+                    break;
+                }
+                RoundResult::Draw => {
+                    println!("It was a draw!");
+                }
+            }
+        } else {
+            println!("Sorry, I didn't quite get that...");
+        }
     }
 
     Ok(())
