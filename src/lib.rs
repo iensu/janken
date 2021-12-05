@@ -1,3 +1,5 @@
+use rand::prelude::*;
+
 #[derive(PartialEq, Debug)]
 pub enum RoundResult {
     Win,
@@ -5,7 +7,7 @@ pub enum RoundResult {
     Draw,
 }
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 pub enum HandShape {
     Rock,
     Paper,
@@ -22,6 +24,16 @@ impl TryFrom<&String> for HandShape {
             "scissors" => Ok(HandShape::Scissors),
             x => Err(format!("Can't turn '{}' into a hand shape", x)),
         }
+    }
+}
+
+impl HandShape {
+    /// Return a random `HandShape`
+    pub fn random() -> HandShape {
+        let mut rng = thread_rng();
+        let selection = vec![HandShape::Rock, HandShape::Paper, HandShape::Scissors];
+
+        selection.choose(&mut rng).unwrap().to_owned()
     }
 }
 
