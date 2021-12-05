@@ -14,11 +14,11 @@ pub enum HandShape {
     Scissors,
 }
 
-impl TryFrom<&str> for HandShape {
-    type Error = String;
+impl std::str::FromStr for HandShape {
+    type Err = String;
 
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
-        match value.trim().to_ascii_lowercase().as_str() {
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.trim().to_ascii_lowercase().as_str() {
             "rock" => Ok(HandShape::Rock),
             "paper" => Ok(HandShape::Paper),
             "scissors" => Ok(HandShape::Scissors),
@@ -123,7 +123,7 @@ mod tests {
         ];
 
         for (input, expected) in tests {
-            let result = HandShape::try_from(input);
+            let result = input.parse();
             assert_eq!(Ok(expected), result);
         }
     }
