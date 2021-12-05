@@ -11,7 +11,7 @@ fn main() -> Result<(), io::Error> {
 
         stdin.read_line(&mut buffer)?;
 
-        if let Ok(shape) = HandShape::try_from(&buffer) {
+        if let Ok(shape) = HandShape::try_from(buffer.as_str()) {
             match execute_round(shape, HandShape::random()) {
                 RoundResult::Win => {
                     println!("Hooray! You won! \\(^O^)/");

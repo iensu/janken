@@ -14,10 +14,10 @@ pub enum HandShape {
     Scissors,
 }
 
-impl TryFrom<&String> for HandShape {
+impl TryFrom<&str> for HandShape {
     type Error = String;
 
-    fn try_from(value: &String) -> Result<Self, Self::Error> {
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
         match value.trim().to_ascii_lowercase().as_str() {
             "rock" => Ok(HandShape::Rock),
             "paper" => Ok(HandShape::Paper),
@@ -123,7 +123,7 @@ mod tests {
         ];
 
         for (input, expected) in tests {
-            let result = HandShape::try_from(&input.to_string());
+            let result = HandShape::try_from(input);
             assert_eq!(Ok(expected), result);
         }
     }
