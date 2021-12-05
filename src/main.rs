@@ -4,10 +4,10 @@ use janken::{execute_round, HandShape, RoundResult};
 
 fn main() -> Result<(), io::Error> {
     let stdin = io::stdin();
-    let mut buffer = String::new();
 
     loop {
         println!("Rock, paper or scissors?");
+        let mut buffer = String::new();
         stdin.read_line(&mut buffer)?;
 
         if let Ok(shape) = HandShape::try_from(buffer) {
