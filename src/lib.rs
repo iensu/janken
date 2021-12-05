@@ -12,6 +12,19 @@ pub enum HandShape {
     Scissors,
 }
 
+impl TryFrom<String> for HandShape {
+    type Error = String;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        match value.trim().to_ascii_lowercase().as_str() {
+            "rock" => Ok(HandShape::Rock),
+            "paper" => Ok(HandShape::Paper),
+            "scissors" => Ok(HandShape::Scissors),
+            x => Err(format!("Can't turn '{}' into a hand shape", x)),
+        }
+    }
+}
+
 /// Executes a round of Rock, Paper, Scissors
 ///
 /// The result is from the perspective of `p1`, so a result of
@@ -81,5 +94,25 @@ mod tests {
             execute_round(HandShape::Scissors, HandShape::Scissors),
             "Scissors draw failed"
         );
+    }
+
+    #[test]
+    fn handshapes_can_be_constructed_from_strings() {
+        let tests = vec![
+            ("rock", HandShape::Rock),
+            ("paper", HandShape::Paper),
+            ("scissors", HandShape::Scissors),
+            ("ROCK", HandShape::Rock),
+            ("PAPER", HandShape::Paper),
+            ("SCISSORS", HandShape::Scissors),
+            ("  rock", HandShape::Rock),
+            ("paper  ", HandShape::Paper),
+            ("  scissors  ", HandShape::Scissors),
+        ];
+
+        for (input, expected) in tests {
+            let result = HandShape::try_from(input.to_string());
+            assert_eq!(Ok(expected), result);
+        }
     }
 }
