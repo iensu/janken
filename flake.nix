@@ -15,76 +15,55 @@ An Rock, Paper, Scissors CLI
   };
 
   outputs = { self, flake-utils, rust-overlay, nixpkgs }:
-    flake-utils.lib.eachSystem [
-      "x86_64-darwin"
-      "x86_64-linux"
-    ]
-      (system:
-        let
-          cargoConfig = builtins.fromTOML(builtins.readFile(./Cargo.toml));
-          name = cargoConfig.package.name;
-          overlays = [ (import rust-overlay) ];
-          pkgs = import nixpkgs { inherit system overlays; };
-          additionalBuildInputs = with pkgs; [];
-          enabledFeatures = [];
-        in
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        cargoConfig = builtins.fromTOML(builtins.readFile(./Cargo.toml));
+
+        overlays = [ (import rust-overlay) ];
+
+        pkgs = import nixpkgs { inherit system overlays; };
+
+        app = (pkgs.makeRustPlatform {
+          cargo = pkgs.rust-bin.stable.latest.default;
+          rustc = pkgs.rust-bin.stable.latest.default;
+        }).buildRustPackage {
+          pname = cargoConfig.package.name;
+          version = cargoConfig.package.version;
+          src = ./.;
+
+          cargoLock = {
+            lockFile = ./Cargo.lock;
+          };
+
+          doCheck = true;
+
+          cargoSha256 = "sha256-fw/zUbYynrpeLGQ/uhs3LEq7tnECvatNAuDCJuCQGms=";
+        };
+      in
         {
-          checks.format = pkgs.runCommand "check-format"
-            {
-              buildInputs = with pkgs; [ rustfmt cargo ];
-            } ''
-            ${pkgs.rustfmt}/bin/cargo-fmt fmt --manifest-path ${./.}/Cargo.toml -- --check
-            touch $out # success!
-            '';
-
-          apps.${name} = {
-            type = "app";
-            program = "${self.pkgs.${system}.${name}}/bin/${name}";
-          };
-
-          packages.${name} = (pkgs.makeRustPlatform {
-            cargo = pkgs.rust-bin.stable.latest.default;
-            rustc = pkgs.rust-bin.stable.latest.default;
-          }).buildRustPackage {
-            pname = cargoConfig.package.name;
-            version = cargoConfig.package.version;
-            src = ./.;
-
-            cargoLock = {
-              lockFile = ./Cargo.lock;
+          packages.${app.pname} = app;
+          packages.docker = pkgs.dockerTools.buildLayeredImage {
+            name = app.pname;
+            tag = app.version;
+            config = {
+              Entrypoint = [ "${app}/bin/${app.pname}" ];
             };
-
-            buildFeatures = enabledFeatures;
-            buildInputs = additionalBuildInputs;
-
-            doCheck = true;
-
-            cargoSha256 = "sha256-fw/zUbYynrpeLGQ/uhs3LEq7tnECvatNAuDCJuCQGms=";
           };
 
-          defaultPackage = self.packages.${system}.${name};
+          defaultPackage = self.packages.${system}.${app.pname};
 
           devShell = pkgs.mkShell {
             buildInputs = with pkgs; [
-              openssl
-              pkgconfig
-              exa
-              fd
-              bat
+              pkg-config
               (rust-bin.stable.latest.default.override {
                 extensions = [
                   "rust-src"
                 ];
               })
               rust-analyzer
-            ] ++ additionalBuildInputs;
+            ];
 
-            shellHook = ''
-              alias cat=bat
-              alias ls=exa
-              alias find=fd
-              export RUST_LOG=debug
-            '';
+            RUST_LOG = "debug";
           };
         });
 }
